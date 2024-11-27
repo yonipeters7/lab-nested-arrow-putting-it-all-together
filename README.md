@@ -8,7 +8,7 @@
 
 **Tools and Resources**
 - **Tools:** Visual Studio Code (VSCode), Node.js
-- **Resources:** MDN Web Docs: Working with Objects, JavaScript 2 module content
+- **Resources:** MDN Web Docs
 - **Setup:** Fork and clone the provided GitHub repository, and run `npm install` to set up the project locally. 
 
 **Instructions**
