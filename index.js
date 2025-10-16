@@ -1,36 +1,35 @@
-// This function creates a secure login tracker for a user
-// It uses a closure to keep track of login attempts privately
+// Outer function: creates a login tracker for a user
 function createLoginTracker(userInfo) {
-  // Tracks the number of login attempts
+  // Tracks number of failed attempts
   let attemptCount = 0;
-  // Maximum allowed attempts before account locks
   const maxAttempts = 3;
 
-  // Return an inner arrow function that handles each login attempt
-  return (passwordAttempt) => {
-    // If the account is already locked
+  // Inner arrow function: handles login attempts
+  const loginAttempt = (passwordAttempt) => {
+    // If account is already locked
     if (attemptCount >= maxAttempts) {
       return "Account locked. Too many failed attempts.";
     }
 
-    // If the password is correct, allow login
+    // If password is correct
     if (passwordAttempt === userInfo.password) {
       return `Welcome, ${userInfo.username}! Login successful.`;
     }
 
-    // Otherwise, increase attempt count
+    // If password is incorrect
     attemptCount++;
     const remaining = maxAttempts - attemptCount;
 
-    // If no attempts remain, lock the account
     if (remaining === 0) {
       return "Account locked. Too many failed attempts.";
     } else {
-      // Otherwise, show how many attempts are left
       return `Incorrect password. Attempts left: ${remaining}`;
     }
   };
+
+  // Return the inner function
+  return loginAttempt;
 }
 
-// Export the function so it can be tested by the grading system
+// Export for grading
 module.exports = { createLoginTracker };
