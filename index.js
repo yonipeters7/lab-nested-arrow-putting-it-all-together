@@ -1,40 +1,36 @@
-
-
-
-module.exports = {
-  ...(typeof createLoginTracker !== 'undefined' && { createLoginTracker })
-};
-
-// Function that creates a login tracker for a given user
+// This function creates a secure login tracker for a user
+// It uses a closure to keep track of login attempts privately
 function createLoginTracker(userInfo) {
-  let attemptCount = 0; // Tracks number of failed attempts
-  const maxAttempts = 3; // Maximum allowed attempts
+  // Tracks the number of login attempts
+  let attemptCount = 0;
+  // Maximum allowed attempts before account locks
+  const maxAttempts = 3;
 
-  // Return an inner function that takes a password attempt
+  // Return an inner arrow function that handles each login attempt
   return (passwordAttempt) => {
-    // If account is already locked
+    // If the account is already locked
     if (attemptCount >= maxAttempts) {
       return "Account locked. Too many failed attempts.";
     }
 
-    // If password is correct
+    // If the password is correct, allow login
     if (passwordAttempt === userInfo.password) {
       return `Welcome, ${userInfo.username}! Login successful.`;
-    } 
-    // If password is incorrect
-    else {
-      attemptCount++;
-      if (attemptCount >= maxAttempts) {
-        return "Account locked. Too many failed attempts.";
-      } else {
-        const attemptsLeft = maxAttempts - attemptCount;
-        return `Incorrect password. Attempts left: ${attemptsLeft}`;
-      }
+    }
+
+    // Otherwise, increase attempt count
+    attemptCount++;
+    const remaining = maxAttempts - attemptCount;
+
+    // If no attempts remain, lock the account
+    if (remaining === 0) {
+      return "Account locked. Too many failed attempts.";
+    } else {
+      // Otherwise, show how many attempts are left
+      return `Incorrect password. Attempts left: ${remaining}`;
     }
   };
 }
 
-// Export for testing
-module.exports = {
-  createLoginTracker
-};
+// Export the function so it can be tested by the grading system
+module.exports = { createLoginTracker };
