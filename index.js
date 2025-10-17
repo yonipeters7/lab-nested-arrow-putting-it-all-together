@@ -1,35 +1,40 @@
-// Outer function: creates a login tracker for a user
+// Define the outer function
 function createLoginTracker(userInfo) {
-  // Tracks number of failed attempts
+  // Initialize the attempt counter
   let attemptCount = 0;
-  const maxAttempts = 3;
 
-  // Inner arrow function: handles login attempts
-  const loginAttempt = (passwordAttempt) => {
-    // If account is already locked
-    if (attemptCount >= maxAttempts) {
-      return "Account locked. Too many failed attempts.";
+  // Return an inner function to handle login attempts
+  return (passwordAttempt) => {
+    // If the account is already locked
+    if (attemptCount >= 3) {
+      return "Account locked due to too many failed login attempts";
     }
 
-    // If password is correct
-    if (passwordAttempt === userInfo.password) {
-      return `Welcome, ${userInfo.username}! Login successful.`;
-    }
-
-    // If password is incorrect
+    // Increment the attempt count
     attemptCount++;
-    const remaining = maxAttempts - attemptCount;
 
-    if (remaining === 0) {
-      return "Account locked. Too many failed attempts.";
+    // Check the password
+    if (passwordAttempt === userInfo.password) {
+      return "Login successful";
     } else {
-      return `Incorrect password. Attempts left: ${remaining}`;
+      if (attemptCount < 3) {
+        return `Attempt ${attemptCount}: Login failed`;
+      } else {
+        return "Account locked due to too many failed login attempts";
+      }
     }
   };
-
-  // Return the inner function
-  return loginAttempt;
 }
 
-// Export for grading
-module.exports = { createLoginTracker };
+// ---- Example test code (you can remove or comment this out later) ----
+
+// Create a tracker for a specific user
+const login = createLoginTracker({ username: "user1", password: "password123" });
+
+console.log(login("wrong"));       // Attempt 1: Login failed
+console.log(login("wrongAgain"));  // Attempt 2: Login failed
+console.log(login("password123")); // Login successful
+console.log(login("test"));        // Account locked due to too many failed login attempts
+
+// Export function for tests (required)
+module.exports = createLoginTracker;
